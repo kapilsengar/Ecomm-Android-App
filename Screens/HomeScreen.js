@@ -228,10 +228,13 @@ export default function HomeScreen() {
         console.log('Retrieved email:', useremail);
 
         // Fetch addresses
-        const response = await axios.get('http://192.168.174.10:8000/addresses', {
-          headers: {'Content-Type': 'application/json'},
-          params: {useremail},
-        });
+        const response = await axios.get(
+          'http://192.168.174.10:8000/addresses',
+          {
+            headers: {'Content-Type': 'application/json'},
+            params: {useremail},
+          },
+        );
 
         console.log('Addresses fetched successfully:', response.data);
         setAddresses(response.data);
@@ -243,8 +246,6 @@ export default function HomeScreen() {
 
     fetchAddresses();
   }, []);
-
-  
 
   return (
     <>
@@ -313,13 +314,14 @@ export default function HomeScreen() {
               style={{width: 24, height: 24}}
             />
             <Pressable>
-            {selectedAddress ? (
+              {selectedAddress ? (
                 <Text>
-                  Deliver to {selectedAddress?.name} - {selectedAddress?.street}{'          '}
+                  Deliver to {selectedAddress?.name} - {selectedAddress?.street}
+                  {'          '}
                 </Text>
               ) : (
-                <Text style={{ fontSize: 13, fontWeight: "500" }}>
-                    Add a Address
+                <Text style={{fontSize: 13, fontWeight: '500'}}>
+                  Add a Address
                 </Text>
               )}
             </Pressable>
@@ -553,84 +555,82 @@ export default function HomeScreen() {
               Select a delivery location to see product availabilty and delivery
               options
             </Text>
-          </View><FlatList
-  horizontal
-  showsHorizontalScrollIndicator={false}
-  data={addresses}
-  keyExtractor={(item, index) => index.toString()} // Use unique key if available
-  renderItem={({ item }) => (
-    <Pressable
-      onPress={() => setSelectedAddress(item)} // Correctly passing the function
-      style={{
-        width: 140,
-        height: 140,
-        borderColor: '#D0D0D0',
-        borderWidth: 1,
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 3,
-        marginRight: 15,
-        marginTop: 10,
-        backgroundColor: selectedAddress === item ? '#FBCEB1' : 'white', // Conditional background color
-      }}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-        <Text style={{ fontSize: 13, fontWeight: 'bold' }}>{item?.name}</Text>
-      </View>
+          </View>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={addresses}
+            keyExtractor={(item, index) => index.toString()} // Use unique key if available
+            renderItem={({item}) => (
+              <Pressable
+                onPress={() => setSelectedAddress(item)} // Correctly passing the function
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderColor: '#D0D0D0',
+                  borderWidth: 1,
+                  padding: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 3,
+                  marginRight: 15,
+                  marginTop: 10,
+                  backgroundColor:
+                    selectedAddress === item ? '#FBCEB1' : 'white', // Conditional background color
+                }}>
+                <View
+                  style={{flexDirection: 'row', alignItems: 'center', gap: 3}}>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>
+                    {item?.name}
+                  </Text>
+                </View>
 
-      <Text
-        numberOfLines={1}
-        style={{ width: 130, fontSize: 13, textAlign: 'center' }}
-      >
-        {item?.houseNo},{item?.landmark}
-      </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{width: 130, fontSize: 13, textAlign: 'center'}}>
+                  {item?.houseNo},{item?.landmark}
+                </Text>
 
-      <Text
-        numberOfLines={1}
-        style={{ width: 130, fontSize: 13, textAlign: 'center' }}
-      >
-        {item?.street}
-      </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{width: 130, fontSize: 13, textAlign: 'center'}}>
+                  {item?.street}
+                </Text>
 
-      <Text
-        numberOfLines={1}
-        style={{ width: 130, fontSize: 13, textAlign: 'center' }}
-      >
-        India, Bangalore
-      </Text>
-    </Pressable>
-  )}
-  ListFooterComponent={() => (
-    <Pressable
-      onPress={() => {
-        setModalVisible(false);
-        navigation.navigate('Address');
-      }}
-      style={{
-        width: 140,
-        height: 140,
-        borderColor: '#D0D0D0',
-        marginTop: 10,
-        borderWidth: 1,
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Text
-        style={{
-          textAlign: 'center',
-          color: '#0066b2',
-          fontWeight: '500',
-        }}
-      >
-        Add an Address or pick-up point
-      </Text>
-    </Pressable>
-  )}
-/>
-
+                <Text
+                  numberOfLines={1}
+                  style={{width: 130, fontSize: 13, textAlign: 'center'}}>
+                  India, Bangalore
+                </Text>
+              </Pressable>
+            )}
+            ListFooterComponent={() => (
+              <Pressable
+                onPress={() => {
+                  setModalVisible(false);
+                  navigation.navigate('Address');
+                }}
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderColor: '#D0D0D0',
+                  marginTop: 10,
+                  borderWidth: 1,
+                  padding: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color: '#0066b2',
+                    fontWeight: '500',
+                  }}>
+                  Add an Address or pick-up point
+                </Text>
+              </Pressable>
+            )}
+          />
 
           <View style={{flexDirection: 'column', gap: 7, marginBottom: 30}}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
