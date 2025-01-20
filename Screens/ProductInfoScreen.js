@@ -13,12 +13,14 @@ import {
 import {useRoute} from '@react-navigation/native'; // Import useRoute
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useCart} from '../Context/CartContext';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProductInfoScreen() {
   const route = useRoute();
   const {width, height} = Dimensions.get('window');
   const [addedToCart, setAddedToCart] = useState(false);
   const {cart, setCart} = useCart();
+  const navigation=useNavigation()
 
   // Item will be the product information passed via route.params
   const item = route.params; // Access product data passed through the route
@@ -36,6 +38,15 @@ export default function ProductInfoScreen() {
     } catch (error) {
       console.error('Error adding item to cart:', error);
     }
+  };
+
+
+  const handleAddToCart = () => {
+    addToCart(); // Call the addToCart function
+    setAddedToCart(true); // Set state to true to show "Go to Cart"
+    setTimeout(() => {
+      setAddedToCart(false); // Revert back to "Add to Cart" after 10 seconds
+    }, 10000); // 10 seconds in milliseconds
   };
 
   return (
@@ -222,7 +233,7 @@ export default function ProductInfoScreen() {
         IN Stock
       </Text>
       <Pressable
-        onPress={addToCart}
+        onPress={addedToCart ? () => navigation.navigate('Cart') : handleAddToCart}
         style={{
           backgroundColor: '#FFC72C',
           padding: 10,
@@ -234,16 +245,19 @@ export default function ProductInfoScreen() {
         }}>
         {addedToCart ? (
           <View>
-            <Text>Added to Cart </Text>
+            <Text>Go to Cart </Text>
           </View>
         ) : (
           <View>
-            <Text>Add to Carts </Text>
+            <Text>Add to Cart </Text>
           </View>
         )}
       </Pressable>
 
       <Pressable
+       onPress={()=>{
+        navigation.navigate('Cart')
+         addToCart()}}
         style={{
           backgroundColor: '#FFAC1C',
           padding: 10,

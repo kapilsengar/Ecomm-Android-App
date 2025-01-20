@@ -18,6 +18,7 @@ export default function Profile() {
     try {
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('email');
+      await AsyncStorage.removeItem('cart');
       console.log('Auth token cleared');
       navigation.replace('Login');
     } catch (error) {
@@ -28,7 +29,7 @@ export default function Profile() {
   // Function to fetch the user ID based on email
   const fetchUserId = async (email) => {
     try {
-      const res = await axios.get('http://10.0.2.2:8000/get-user', {
+      const res = await axios.get('http://192.168.174.10:8000/get-user', {
         params: { email },  // Pass email as query parameter
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +51,7 @@ export default function Profile() {
 
         if (useremail) {
           const userId = await fetchUserId(useremail);  // Wait for userId
-          const response = await axios.get(`http://10.0.2.2:8000/profile?userId=${userId}`, {
+          const response = await axios.get(`http://192.168.174.10:8000/profile?userId=${userId}`, {
             headers: {
               'Content-Type': 'application/json',
             },
@@ -96,13 +97,13 @@ export default function Profile() {
 
       {/* Display user data */}
       <Text style={{ fontSize: 16, marginTop: 40 }}>
-        Email: {user.email}
+        Email: {user.email}{''}
       </Text>
       <Text style={{ fontSize: 16, marginTop: 30 }}>
-        Password: {user.password}
+        Password: {user.password}{' '}
       </Text>
       <Text style={{ fontSize: 16, marginTop: 30 }}>
-        Registered At: {new Date(user.createdAt).toLocaleDateString()}
+        Registered At: {new Date(user.createdAt).toLocaleDateString()}{'  '}
       </Text>
 
       

@@ -29,7 +29,7 @@ export default function SignUpScreen() {
     try {
       // Update URL to work with Android emulator
       const response = await axios.post(
-        'http://10.0.2.2:8000/register',  // Use this IP for Android Emulator
+        'http://192.168.174.10:8000/register',  // Use this IP for Android Emulator
         user,
         { headers: { 'Content-Type': 'application/json' } }  // Set correct content type
       );

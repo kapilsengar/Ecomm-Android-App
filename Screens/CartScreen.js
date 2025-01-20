@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useCart } from '../Context/CartContext';
+import { useNavigation } from '@react-navigation/native';
 
 
 const CartScreen = () => {
@@ -68,11 +69,11 @@ const CartScreen = () => {
   if (cart.length === 0) {
     return (
       <View style={styles.emptyCart}>
-        <Text style={{ fontSize: 18 }}>Your cart is empty!</Text>
+        <Text style={{ fontSize: 18 }}>Your cart is empty!{' '}</Text>
       </View>
     );
   }
-
+const navigation=useNavigation()
   return (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
       <View style={styles.header}>
@@ -81,8 +82,12 @@ const CartScreen = () => {
       </View>
       <Text style={{ marginHorizontal: 10 }}>EMI details Available</Text>
 
-      <Pressable style={styles.buyButton}>
-        <Text>Proceed to Buy ({cart.length}) items</Text>
+      <Pressable 
+      onPress={()=>{
+        navigation.navigate('Confirm')
+      }}
+      style={styles.buyButton}>
+        <Text>Proceed to Buy ({cart.length}) items{' '}</Text>
       </Pressable>
 
       <Text style={styles.separator} />
@@ -94,9 +99,9 @@ const CartScreen = () => {
       <Pressable style={styles.itemDetails}>
         <Image style={styles.itemImage} source={{ uri: item?.image }} />
         <View>
-          <Text numberOfLines={3} style={styles.itemTitle}>{item?.title}</Text>
-          <Text style={styles.itemPrice}>₹{item?.price}</Text>
-          <Text style={{ color: 'green' }}>In Stock</Text>
+          <Text numberOfLines={3} style={styles.itemTitle}>{item?.title}{' '}</Text>
+          <Text style={styles.itemPrice}>₹{item?.price}{' '}</Text>
+          <Text style={{ color: 'green' }}>In Stock{' '}</Text>
         </View>
       </Pressable>
 
@@ -111,13 +116,13 @@ const CartScreen = () => {
           </Pressable>
         </View>
         <Pressable onPress={() => removeItem(item)} style={styles.deleteButton}>
-          <Text>Delete</Text>
+          <Text>Delete{' '}</Text>
         </Pressable>
       </View>
     </View>
   ))
 ) : (
-  <Text>No items in the cart</Text>
+  <Text>No items in the cart{' '}</Text>
 )}
 
       </View>

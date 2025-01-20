@@ -8,6 +8,7 @@ const port = 8000;
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const user = require('./models/user');
+const Order = require("./models/order");
 
 
 app.use(cors());
@@ -150,4 +151,112 @@ app.get("/get-user", async (req, res) => {
         res.status(500).json({ message: "Error retrieving the user profile" });
     }
 });
+
+app.post("/address",async(req,res)=>{
+    try {
+        
+        const {address,useremail} =req.body
+        console.log('addess',address)
+        console.log('email',useremail)
+        const foundUser=await user.findOne({email:useremail})
+        console.log('user',foundUser)
+        foundUser.addresses.push(address)
+         await foundUser.save()
+         res.status(200).json({message:"Address Created Successfully"})
+    } catch (error) {
+        res.status(500).json({message:"error adding addresses"})
+    }
+})
   
+app.get("/addresses", async (req, res) => {
+    try {
+        const {useremail } = req.query;  // Access email from query parameters
+        console.log("email", useremail);
+        
+        // Fetch user by email
+        const foundUser = await user.findOne({ email:useremail });
+        console.log("user", foundUser);
+
+        if (foundUser) {
+            res.send(foundUser.addresses);  // Return the addresses
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        console.error("Error retrieving the user profile:", error);
+        res.status(500).json({ message: "Error retrieving the user profile" });
+    }
+});
+
+
+app.post('/orders', async (req, res) => {
+    try {
+      const { useremail, cartItems, totalPrice, shippingAddress, paymentMethod } = req.body;
+  
+      // Validate input
+      if (!useremail || !cartItems || !totalPrice || !shippingAddress || !paymentMethod) {
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
+  
+      // Check if user exists
+      const existingUser = await user.findOne({ email: useremail });
+      if (!existingUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Convert totalPrice to a number
+      const formattedTotalPrice = parseFloat(totalPrice.toString().replace(/,/g, ''));
+  
+      if (isNaN(formattedTotalPrice)) {
+        return res.status(400).json({ message: 'Invalid total price' });
+      }
+  
+      // Prepare product objects
+      const products = cartItems.map((item) => ({
+        name: item?.title || 'Unknown Product',
+        quantity: item?.quantity || 1,
+        price: item?.price || 0,
+        image: item?.image || '',
+      }));
+  
+      if (products.length === 0) {
+        return res.status(400).json({ message: 'Cart is empty' });
+      }
+  
+      // Create and save the order
+      const order = new Order({
+        user: existingUser._id, // Use ObjectId of the user
+        products: products,
+        totalPrice: formattedTotalPrice,
+        shippingAddress: shippingAddress,
+        paymentMethod: paymentMethod,
+      });
+  
+      await order.save();
+  
+      res.status(200).json({ message: 'Order created successfully!' });
+    } catch (error) {
+      console.error('Error creating order:', error);
+      res.status(500).json({ message: 'Error creating order', error: error.message });
+    }
+  });
+  
+
+  app.get('/orders', async (req, res) => {
+    try {
+        const userId = req.query.userId; // Fetch userId from query parameter
+        const foundOrder = await Order.find({ user: userId }); // Fetch the order for the given userId
+
+        if (!foundOrder) {
+            return res.status(404).json({ message: "Orders not found" });
+        }
+
+        // Assuming `foundOrder.orders` contains the list of orders
+        
+        console.log("Fetched ordersrererere:", foundOrder);
+        res.send(foundOrder)
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving orders" });
+        console.error("Error retrieving orders:", error);
+    }
+});

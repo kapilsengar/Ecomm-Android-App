@@ -10,6 +10,10 @@ import ProductInfoScreen from '../Screens/ProductInfoScreen';
 import Profile from '../Components/Profile';
 import CartScreen from '../Screens/CartScreen';
 import Orderscreen from '../Screens/Orderscreen';
+import AddAddressScreen from '../Screens/AddAddressScreen';
+import AddressScreen from '../Screens/AddressScreen';
+import ConfirmationScreen from '../Screens/ConfirmationScreen';
+import PlaceOrderScreen from '../Screens/PlaceOrderScreen';
 
 
 
@@ -126,6 +130,26 @@ export default function StackNavigatior() {
         <Stack.Screen
           name="Cart"
           component={CartScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Address"
+          component={AddAddressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Add"
+          component={AddressScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Confirm"
+          component={ConfirmationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PlaceOrder"
+          component={PlaceOrderScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
